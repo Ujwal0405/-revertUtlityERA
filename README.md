@@ -1,6 +1,6 @@
-# Revert Utlity Era2
+# Revert_Utlity_ERA2
 
-This utility takes the data from mongo New ERALive2.0 and convert it into old ERA folder structure LC.
+This Utility will collect all th data from mongo and will create metabase as per old ERA
 
 ## Getting started
 
