@@ -28,7 +28,7 @@ func main() {
 	fmt.Println("Application Started")
 	dalhelper.EnableSecurity([]byte(SecurityKey), IV)
 	var hostname, username, password, dbName string
-	hostname = "10.15.20.80:27017"
+	hostname = "10.15.20.251:27017"
 	username = "reader"
 	password = url.QueryEscape("reader#123")
 	dbName = "ERALive_2"
@@ -38,39 +38,21 @@ func main() {
 		return
 	}
 
-	LearnerID := "2024302"
-	_, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
-	if err != nil {
+	LearnerID := "2024303"
+	// _, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
+	// if err != nil {
+	// 	logginghelper.LogError(err)
+	// 	return
+	// }
+
+	// Assuming LearnerID is defined somewhere in your code
+
+	// Call GetDistinctSessionIDsAndDetails and handle the error
+	if err := migration.ProcessLearner3_8Files(context.Background(), LearnerID); err != nil {
 		logginghelper.LogError(err)
+		// Handle the error further if necessary
 		return
 	}
 
 	fmt.Println("Application Stop")
 }
-
-// func WriteData(learnerID string, data interface{}) error {
-// 	filePath := models.GetLearnerAllocationDetailsFilePathByID(learnerID)
-// 	filehelper.CreateDirectoryRecursive(filePath)
-// 	// filePath := fmt.Sprintf("./3_7_%s.json", learnerID)
-// 	jsonData, err := json.Marshal(data)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// Create and open the file for writing
-// 	file, err := os.Create(filePath)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer file.Close()
-
-// 	// Write the JSON data to the file
-// 	_, err = file.Write(jsonData)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Optionally, you can also output a message or log
-// 	// to confirm the file has been written successfully
-// 	logginghelper.LogInfo("JSON data written to", filePath)
-// 	return nil
-// }
