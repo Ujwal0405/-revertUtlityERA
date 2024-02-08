@@ -7,13 +7,16 @@ import (
 	"github/revert_utility_era2/helper/dalhelper"
 	"github/revert_utility_era2/migration"
 	"net/url"
+	"sync"
 
 	"corelab.mkcl.org/MKCLOS/coredevelopmentplatform/coreospackage/logginghelper"
 )
 
 var (
-	SecurityKey = "MKCLSecurity$#@!"
-	IV          = "AAAAAAAAAAAAAAAA"
+	SecurityKey      = "MKCLSecurity$#@!"
+	IV               = "AAAAAAAAAAAAAAAA"
+	MapMutex         = &sync.Mutex{}
+	LearnerCenterMap map[string]string
 )
 
 // J3a@Wg_vsL6e9y$$ // bsdm production
@@ -38,21 +41,45 @@ func main() {
 		return
 	}
 
-	LearnerID := "2024303"
+	LearnerID := []string{"202320011", "202320010"}
+
+	for _, lId := range LearnerID {
+		err := PrepareLearnerMetabse(lId)
+		if err != nil {
+			logginghelper.LogError(err)
+			return
+		}
+	}
+
 	// _, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
 	// if err != nil {
 	// 	logginghelper.LogError(err)
 	// 	return
 	// }
-
-	// Assuming LearnerID is defined somewhere in your code
-
-	// Call GetDistinctSessionIDsAndDetails and handle the error
-	if err := migration.ProcessLearner3_8Files(context.Background(), LearnerID); err != nil {
-		logginghelper.LogError(err)
-		// Handle the error further if necessary
-		return
-	}
+	// _, err = migration.ProcessLearner3_12File(context.Background(), LearnerID)
+	// if err != nil {
+	// 	logginghelper.LogError(err)
+	// 	return
+	// }
 
 	fmt.Println("Application Stop")
+}
+
+func PrepareLearnerMetabse(lId string) error {
+
+	learnerBasicData, err := migration.ProcessLearner3_7File(context.Background(), lId)
+	if err != nil {
+		logginghelper.LogError(err)
+		return err
+	}
+	_, err = migration.ProcessLearner3_12File(context.Background(), lId, learnerBasicData.CenterCode)
+	if err != nil {
+		logginghelper.LogError(err)
+		return err
+	}
+	if err := migration.ProcessLearner3_8Files(context.Background(), lId); err != nil {
+		logginghelper.LogError(err)
+		return err
+	}
+	return nil
 }

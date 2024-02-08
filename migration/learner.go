@@ -10,20 +10,28 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func ProcessLearner3_7File(ctx context.Context, learnerID string) (models.LearnerAllocation, error) {
+type LearnerDetails struct {
+	LearnerId  string `json:"learnerId"`
+	CenterCode string `json:"centerCode"`
+}
+
+func ProcessLearner3_7File(ctx context.Context, learnerID string) (models.LearnerBasicDtls, error) {
+	logginghelper.LogDebug("IN: ProcessLearner3_7File")
 	learnerAllocation := models.LearnerAllocation{}
+
 	centerCode := ""
 	learnerDetails, err := getLearnerDetails(ctx, learnerID)
 	if err != nil {
-		return learnerAllocation, err
+		return models.LearnerBasicDtls{}, err
 	}
 
 	learnerAllocation.LearnerDetails = learnerDetails
 
 	allocations, err := getLearnerAllocations(ctx, learnerID)
 	if err != nil {
-		return learnerAllocation, err
+		return models.LearnerBasicDtls{}, err
 	}
+
 	if len(allocations) > 0 {
 		centerCode = allocations[0].LearningCenterCode
 	}
@@ -34,10 +42,13 @@ func ProcessLearner3_7File(ctx context.Context, learnerID string) (models.Learne
 	err = utils.WriteData(filePath, learnerAllocation)
 
 	if err != nil {
-		return learnerAllocation, err
+		return models.LearnerBasicDtls{}, err
 	}
-
-	return learnerAllocation, nil
+	logginghelper.LogDebug("OUT: ProcessLearner3_7File")
+	return models.LearnerBasicDtls{
+		LearnerID:  learnerID,
+		CenterCode: centerCode,
+	}, nil
 }
 
 func getLearnerDetails(ctx context.Context, learnerID string) (models.LearnerDetails, error) {
@@ -46,7 +57,8 @@ func getLearnerDetails(ctx context.Context, learnerID string) (models.LearnerDet
 		"learnerId": learnerID,
 	}
 	ld := models.MongoLearnerDetails{}
-	err := db.ERALiveDB.Collection(LearnerSessionCompletionDetailsCollection).FindOne(ctx, filter).Decode(&ld)
+	// err := db.ERALiveDB.Collection(LearnerSessionCompletionDetailsCollection).FindOne(ctx, filter).Decode(&ld)
+	err := db.ERALiveDB.Collection(models.LEARNING_SESSION_COMPLETION_DETAILS_COLLECTION_NAME).FindOne(ctx, filter).Decode(&ld)
 
 	if err != nil {
 		return models.LearnerDetails{}, err
@@ -63,7 +75,7 @@ func getLearnerCourseAllocationFromMongo(ctx context.Context, learnerID string) 
 		"learnerId": learnerID,
 	}
 
-	courceAllocationscursor, err := db.ERALiveDB.Collection(LearnerCourceAllocationCollection).Find(ctx, filter)
+	courceAllocationscursor, err := db.ERALiveDB.Collection(models.LEARNER_COURSE_ALLOCATION_COLLECTION_NAME).Find(ctx, filter)
 
 	if err != nil {
 		return nil, err
@@ -88,7 +100,7 @@ func getSessionCompletionDetailsFromMongo(ctx context.Context, allocation models
 		"eCoursePatternId": allocation.ECoursePatternId,
 	}
 	logginghelper.LogInfo("filter:", filter)
-	cursor, err := db.ERALiveDB.Collection(LearnerSessionCompletionDetailsCollection).Find(ctx, filter)
+	cursor, err := db.ERALiveDB.Collection(models.LEARNING_SESSION_COMPLETION_DETAILS_COLLECTION_NAME).Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +146,7 @@ func prepareLearnerAllocationObject(mallocation models.MongoLearnerCourceAllocat
 		LearningCenterID:                   mallocation.LearningCenterId,
 		LearningCenterCode:                 mallocation.LearningCenterCode,
 		LearningCenterName:                 mallocation.LearningCenterName,
-		BatchID:                            utils.ToString(mallocation.ConfirmationMonth),
+		BatchID:                            utils.ToString(mallocation.ConfirmationMonth + mallocation.ConfirmationYear),
 		BatchName:                          mallocation.BatchName,
 		ProgramID:                          mallocation.ProgramId,
 		ProgramName:                        mallocation.ProgramName,
