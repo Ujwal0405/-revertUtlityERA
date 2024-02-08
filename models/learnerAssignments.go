@@ -5,15 +5,16 @@ package models
 import "time"
 
 type LearnerAssignments struct {
-	LearnerID          string               `json:"learnerId"`
-	ProgramID          string               `json:"programId"`
-	ECourseID          string               `json:"eCourseId"`
-	CoursePatternID    string               `json:"coursePatternId"`
-	BatchID            string               `json:"batchId"`
-	UploadFlag         bool                 `json:"uploadFlag"`
-	UploadDate         time.Time            `json:"uploadDate"`
-	LastModified       time.Time            `json:"lastModified"`
-	AssignmentsDetails []AssignmentsDetails `json:"assignmentsDetails"`
+	LearnerID            string               `json:"learnerId"`
+	ProgramID            string               `json:"programId"`
+	ECourseID            string               `json:"eCourseId"`
+	CoursePatternID      string               `json:"coursePatternId"`
+	BatchID              string               `json:"batchId"`
+	UploadFlag           bool                 `json:"uploadFlag"`
+	UploadDate           time.Time            `json:"uploadDate"`
+	LastModified         time.Time            `json:"lastModified"`
+	SessionAggregationID string               `bson:"sessionAggregationID"`
+	AssignmentsDetails   []AssignmentsDetails `json:"assignmentsDetails"`
 }
 
 type AssignmentsDetails struct {
