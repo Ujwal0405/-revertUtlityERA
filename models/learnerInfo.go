@@ -206,3 +206,8 @@ type LearningCenterStaff struct {
 	EmailID           string `json:"emailId,omitempty"`
 	DisplayOrdinality int    `json:"displayOrdinality,omitempty"`
 }
+
+type LearnerBasicDtls struct {
+	LearnerID  string `json:"learnerId"`
+	CenterCode string `json:"centerCode"`
+}

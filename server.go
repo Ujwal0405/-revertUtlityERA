@@ -7,13 +7,16 @@ import (
 	"github/revert_utility_era2/helper/dalhelper"
 	"github/revert_utility_era2/migration"
 	"net/url"
+	"sync"
 
 	"corelab.mkcl.org/MKCLOS/coredevelopmentplatform/coreospackage/logginghelper"
 )
 
 var (
-	SecurityKey = "MKCLSecurity$#@!"
-	IV          = "AAAAAAAAAAAAAAAA"
+	SecurityKey      = "MKCLSecurity$#@!"
+	IV               = "AAAAAAAAAAAAAAAA"
+	MapMutex         = &sync.Mutex{}
+	LearnerCenterMap map[string]string
 )
 
 // J3a@Wg_vsL6e9y$$ // bsdm production
@@ -38,39 +41,41 @@ func main() {
 		return
 	}
 
-	LearnerID := "2024302"
-	_, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
-	if err != nil {
-		logginghelper.LogError(err)
-		return
+	LearnerID := []string{"202320011", "202320010"}
+
+	for _, lId := range LearnerID {
+		err := PrepareLearnerMetabse(lId)
+		if err != nil {
+			logginghelper.LogError(err)
+			return
+		}
 	}
+
+	// _, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
+	// if err != nil {
+	// 	logginghelper.LogError(err)
+	// 	return
+	// }
+	// _, err = migration.ProcessLearner3_12File(context.Background(), LearnerID)
+	// if err != nil {
+	// 	logginghelper.LogError(err)
+	// 	return
+	// }
 
 	fmt.Println("Application Stop")
 }
 
-// func WriteData(learnerID string, data interface{}) error {
-// 	filePath := models.GetLearnerAllocationDetailsFilePathByID(learnerID)
-// 	filehelper.CreateDirectoryRecursive(filePath)
-// 	// filePath := fmt.Sprintf("./3_7_%s.json", learnerID)
-// 	jsonData, err := json.Marshal(data)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// Create and open the file for writing
-// 	file, err := os.Create(filePath)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer file.Close()
+func PrepareLearnerMetabse(lId string) error {
 
-// 	// Write the JSON data to the file
-// 	_, err = file.Write(jsonData)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Optionally, you can also output a message or log
-// 	// to confirm the file has been written successfully
-// 	logginghelper.LogInfo("JSON data written to", filePath)
-// 	return nil
-// }
+	learnerBasicData, err := migration.ProcessLearner3_7File(context.Background(), lId)
+	if err != nil {
+		logginghelper.LogError(err)
+		return err
+	}
+	_, err = migration.ProcessLearner3_12File(context.Background(), lId, learnerBasicData.CenterCode)
+	if err != nil {
+		logginghelper.LogError(err)
+		return err
+	}
+	return nil
+}

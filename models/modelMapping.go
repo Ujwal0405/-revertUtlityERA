@@ -50,6 +50,9 @@ func GetLearnerCourseActivityDirectoryPath(learnerID string) string {
 func GetBundleDirectoryPath(learnerID string) string {
 	return DBROOTPATH + LEARNER_LOCAL_CREATE_FILES + learnerID + FILE_SEPARATOR + BUNDLE_DIRECTORY_NAME + FILE_SEPARATOR
 }
+func GetCourseActivityDirPath(centerCode, learnerId string) string {
+	return DBROOTPATH + FILE_SEPARATOR + LOCAL_CREATE_FILES + CENTER_CODE_ABBREVIATION + centerCode + FILE_SEPARATOR + LEARNER_DIRECTORY_NAME + learnerId + FILE_SEPARATOR + COURSE_ACTIVITY_DIRECTORY_NAME
+}
 
 func GetBundleFilePath(bundleName, learnerID, programID, eCourseID string) string {
 	directoryPath := GetBundleDirectoryPath(learnerID)
@@ -86,6 +89,13 @@ func GetLearnerDirLCPath(centerCode, learnerID string) string {
 
 func GetCenterLCPath(centerCode string) string {
 	return DBROOTPATH + FILE_SEPARATOR + LOCAL_CREATE_FILES + CENTER_CODE_ABBREVIATION + centerCode + FILE_SEPARATOR
+}
+
+// GetLearnerAssignmentDetailsFilePath GetLearnerAssignmentDetailsFilePath
+func GetLearnerAssignmentDetailsFilePath(learnerID, centerCode, programID, eCourseID, batchID, sessionAggregationID string) string {
+	courseActivityPath := GetCourseActivityDirPath(centerCode, learnerID)
+	learnerAssignmentPath := courseActivityPath + LC_LEARNER_ASSIGNMENTS_MAPPING_CODES + learnerID + "_" + programID + "_" + eCourseID + "_" + batchID + "_" + sessionAggregationID + FILE_EXTENTION
+	return learnerAssignmentPath
 }
 
 func FileAvailabilityCheck(filePath string) bool {
