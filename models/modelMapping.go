@@ -70,8 +70,9 @@ func GetLearnerAllocationDetailsFilePathByID(learnerID string) string {
 }
 
 // GetLearnerCourseVisitFilePath Get Learner Course Visit File Path
-func GetLearnerCourseVisitFilePath(learnerId, programID, eCourseID, sessionID string) string {
-	return DBROOTPATH + LEARNER_LOCAL_CREATE_FILES + learnerId + "/" + COURSE_ACTIVITY_DIRECTORY_NAME + LC_LEARNER_COURSE_VISIT_MAPPING_CODES + learnerId + "_" + programID + "_" + eCourseID + "_" + sessionID + FILE_EXTENTION
+func GetLearnerCourseVisitFilePath(centerCode, learnerId, programID, eCourseID, sessionID string) string {
+	courseActivityPath := GetCourseActivityDirPath(centerCode, learnerId)
+	return courseActivityPath + LC_LEARNER_COURSE_VISIT_MAPPING_CODES + learnerId + "_" + programID + "_" + eCourseID + "_" + sessionID + FILE_EXTENTION
 }
 
 // GetLearnerAllocationFileLCPath -

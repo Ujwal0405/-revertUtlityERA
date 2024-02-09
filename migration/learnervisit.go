@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func ProcessLearner3_8Files(ctx context.Context, learnerID string) error {
+func ProcessLearner3_8Files(ctx context.Context, learnerID, centerCode string) error {
 	// Construct an aggregation pipeline to group sessions by ID
 	pipeline := bson.A{
 		bson.M{
@@ -51,7 +51,7 @@ func ProcessLearner3_8Files(ctx context.Context, learnerID string) error {
 		result.Details.VisitsDetail = visitDetails
 
 		// Create a file path for the JSON file based on the session ID
-		filePath := models.GetLearnerCourseVisitFilePath(learnerID, result.Details.ProgramID, result.Details.ECourseID, result.Details.SessionID)
+		filePath := models.GetLearnerCourseVisitFilePath(centerCode, learnerID, result.Details.ProgramID, result.Details.ECourseID, result.Details.SessionID)
 		// Write the session details to the JSON file
 		err = utils.WriteData(filePath, result.Details)
 		if err != nil {

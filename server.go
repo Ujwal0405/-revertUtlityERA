@@ -41,7 +41,7 @@ func main() {
 		return
 	}
 
-	LearnerID := []string{"202320011", "202320010"}
+	LearnerID := []string{"12121212"}
 
 	for _, lId := range LearnerID {
 		err := PrepareLearnerMetabse(lId)
@@ -77,7 +77,7 @@ func PrepareLearnerMetabse(lId string) error {
 		logginghelper.LogError(err)
 		return err
 	}
-	if err := migration.ProcessLearner3_8Files(context.Background(), lId); err != nil {
+	if err := migration.ProcessLearner3_8Files(context.Background(), lId, learnerBasicData.CenterCode); err != nil {
 		logginghelper.LogError(err)
 		return err
 	}
