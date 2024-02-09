@@ -44,7 +44,7 @@ var (
 )
 
 func Get3_7FilePath(learnerId string) string {
-	return DBROOTPATH + "/3_7FileFailedLearnerIds.txt"
+	return DBROOTPATH + "/3_7FileGenerationFailedLearnerIds.txt"
 }
 
 // GetLearnerCourseActivityDirectoryPath Get Learner Local course Directory Path
