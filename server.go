@@ -6,6 +6,7 @@ import (
 	"github/revert_utility_era2/db"
 	"github/revert_utility_era2/helper/dalhelper"
 	"github/revert_utility_era2/migration"
+	"github/revert_utility_era2/utils"
 	"net/url"
 	"sync"
 
@@ -41,7 +42,7 @@ func main() {
 		return
 	}
 
-	LearnerID := []string{"12121212"}
+	LearnerID := []string{"1136", "202320011", "2024301", "1233", "2344"}
 
 	for _, lId := range LearnerID {
 		err := PrepareLearnerMetabse(lId)
@@ -50,36 +51,21 @@ func main() {
 			return
 		}
 	}
-
-	// _, err := migration.ProcessLearner3_7File(context.Background(), LearnerID)
-	// if err != nil {
-	// 	logginghelper.LogError(err)
-	// 	return
-	// }
-	// _, err = migration.ProcessLearner3_12File(context.Background(), LearnerID)
-	// if err != nil {
-	// 	logginghelper.LogError(err)
-	// 	return
-	// }
-
 	fmt.Println("Application Stop")
 }
 
 func PrepareLearnerMetabse(lId string) error {
-
 	learnerBasicData, err := migration.ProcessLearner3_7File(context.Background(), lId)
 	if err != nil {
 		logginghelper.LogError(err)
-		return err
+		utils.WriteFailedLearnerID3_7(lId)
 	}
 	_, err = migration.ProcessLearner3_12File(context.Background(), lId, learnerBasicData.CenterCode)
 	if err != nil {
 		logginghelper.LogError(err)
-		return err
 	}
 	if err := migration.ProcessLearner3_8Files(context.Background(), lId, learnerBasicData.CenterCode); err != nil {
 		logginghelper.LogError(err)
-		return err
 	}
 	return nil
 }

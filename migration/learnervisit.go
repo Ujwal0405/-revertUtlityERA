@@ -24,7 +24,7 @@ func ProcessLearner3_8Files(ctx context.Context, learnerID, centerCode string) e
 	}
 
 	// Execute the aggregation pipeline
-	cursor, err := db.ERALiveDB.Collection(LEARNER_SESSION_VISIT_DETAILS_COLLECTION_NAME).Aggregate(ctx, pipeline)
+	cursor, err := db.ERALiveDB.Collection(models.LEARNER_SESSION_VISIT_DETAILS_COLLECTION_NAME).Aggregate(ctx, pipeline)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func fetchVisitDetailsForSession(ctx context.Context, session models.LearnerVisi
 	}
 
 	// Fetch all visit details for the session
-	cursor, err := db.ERALiveDB.Collection(LEARNER_SESSION_VISIT_DETAILS_COLLECTION_NAME).Find(ctx, filter)
+	cursor, err := db.ERALiveDB.Collection(models.LEARNER_SESSION_VISIT_DETAILS_COLLECTION_NAME).Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

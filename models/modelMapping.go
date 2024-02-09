@@ -43,6 +43,10 @@ var (
 	// LC_LEARNER_FINAL_EXAM_ATTEMPTS_MAPPING_CODES = FILE_PREFIX + "3_64_"
 )
 
+func Get3_7FilePath(learnerId string) string {
+	return DBROOTPATH + "/3_7FileFailedLearnerIds.txt"
+}
+
 // GetLearnerCourseActivityDirectoryPath Get Learner Local course Directory Path
 func GetLearnerCourseActivityDirectoryPath(learnerID string) string {
 	return DBROOTPATH + LEARNER_LOCAL_CREATE_FILES + learnerID + FILE_SEPARATOR + COURSE_ACTIVITY_DIRECTORY_NAME
