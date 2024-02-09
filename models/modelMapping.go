@@ -43,6 +43,10 @@ var (
 	// LC_LEARNER_FINAL_EXAM_ATTEMPTS_MAPPING_CODES = FILE_PREFIX + "3_64_"
 )
 
+func Get3_7FilePath(learnerId string) string {
+	return DBROOTPATH + "/3_7FileGenerationFailedLearnerIds.txt"
+}
+
 // GetLearnerCourseActivityDirectoryPath Get Learner Local course Directory Path
 func GetLearnerCourseActivityDirectoryPath(learnerID string) string {
 	return DBROOTPATH + LEARNER_LOCAL_CREATE_FILES + learnerID + FILE_SEPARATOR + COURSE_ACTIVITY_DIRECTORY_NAME
@@ -70,8 +74,9 @@ func GetLearnerAllocationDetailsFilePathByID(learnerID string) string {
 }
 
 // GetLearnerCourseVisitFilePath Get Learner Course Visit File Path
-func GetLearnerCourseVisitFilePath(learnerId, programID, eCourseID, sessionID string) string {
-	return DBROOTPATH + LEARNER_LOCAL_CREATE_FILES + learnerId + "/" + COURSE_ACTIVITY_DIRECTORY_NAME + LC_LEARNER_COURSE_VISIT_MAPPING_CODES + learnerId + "_" + programID + "_" + eCourseID + "_" + sessionID + FILE_EXTENTION
+func GetLearnerCourseVisitFilePath(centerCode, learnerId, programID, eCourseID, sessionID string) string {
+	courseActivityPath := GetCourseActivityDirPath(centerCode, learnerId)
+	return courseActivityPath + LC_LEARNER_COURSE_VISIT_MAPPING_CODES + learnerId + "_" + programID + "_" + eCourseID + "_" + sessionID + FILE_EXTENTION
 }
 
 // GetLearnerAllocationFileLCPath -
