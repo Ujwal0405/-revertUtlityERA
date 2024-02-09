@@ -39,8 +39,8 @@ func getLearnerAssignments(ctx context.Context, learnerId string) ([]models.Lear
 		return nil, err
 	}
 	filters := filterAssignmentBySessionId(mAssignments)
+	la := models.LearnerAssignments{}
 	for _, ads := range filters {
-		la := models.LearnerAssignments{}
 		for _, ad := range ads {
 
 			la.LearnerID = ad.LearnerId
